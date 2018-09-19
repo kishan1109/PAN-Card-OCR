@@ -27,10 +27,13 @@ for y in range(img.size[1]):
         else:
             pix[x, y] = (255, 255, 255, 255)
 
-img.save('temp.jpg')
+#img.save('temp.jpg')
 
-text = pytesseract.image_to_string(Image.open('temp.jpg'))
+#text = pytesseract.image_to_string(Image.open('temp.jpg'))
+text = pytesseract.image_to_string(img)
 text = filter(lambda x: ord(x)<128,text)
+
+print text
 
 # Initializing data variable
 name = None
@@ -54,7 +57,7 @@ for lin in lines:
 	text1.append(s)
 
 text1 = filter(None, text1)	
-#print(text1)
+print(text1)
 lineno=0
 
 for wordline in text1:
@@ -64,7 +67,7 @@ for wordline in text1:
 		break
 
 text0 = text1[lineno+1:]
-#print(text0)
+print(text0)
 
 #-----------Read Database
 with open('namedb.csv', 'rb') as f:
@@ -90,7 +93,7 @@ except:
 	
 try:
 	dobline = [item for item in text0 if item not in nameline]
-#	print dobline
+	print dobline
 	for x in dobline:
 		z = x.split()
 		z = [s for s in z if len(s) > 3]
@@ -119,13 +122,18 @@ data['Father Name'] = fname
 data['Date of Birth'] = dob
 data['PAN'] = pan
 
+print name
+print fname
+print dob
+print pan
+
 # Writing data into JSON
-with open('../result/'+ os.path.basename(sys.argv[1]).split('.')[0] +'.json', 'w') as fp:
+with open('/home/kishankumar/my_work/YTs/pan_ocr/'+ os.path.basename(sys.argv[1]).split('.')[0] +'.json', 'w') as fp:
     json.dump(data, fp)
 
 
 # Removing dummy files
-os.remove('temp.jpg')
+#os.remove('temp.jpg')
 
 
 '''
